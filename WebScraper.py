@@ -10,7 +10,21 @@ from RequestExceptions import Error404
 # Type hinting included for ease of reading and autocompletion while in dev
 from typing import Union
 
-# In future will turn this into 
+'''
+TODO:
+    -Error Handles:
+        -Bad web responses
+            --> .getWebpageResponse(...)
+        -Bad configs
+            --> .loadConfig(...)
+    -Error Logging:
+        -Bad web responses
+        -FileNotFoundError
+        -BadConfigError
+    -Default handling
+    -README.md with important naming conventions, formatting for config files, etc.
+'''
+
 class WebScraper:
 
     def __init__(self, url: Union[str, None] = None) -> None:
@@ -18,6 +32,7 @@ class WebScraper:
         self.response = None
         self.soup = None
         self.strainer = None
+        self.config = None
 
     def getWebpageResponse(self, url: str, timeout: float = 2) -> Union[requests.models.Response, None]:
             
@@ -25,28 +40,27 @@ class WebScraper:
         
         # Make response request
         response = requests.get(url)
-        self.response = response
-
-        # Error handling to be written for responses other than 200 (successful response)
+        
         if response.status_code != 200:
-            
+
+            self.response = None
+
             if response.status_code == 404:
                 raise Error404(url, timeout)
             
             return None
-        
+
         else:
+
+            self.response = response
             return response
 
-    def soupify(self, parser: str = "lxml", config: Union[str, None] = None) -> Union[BeautifulSoup, None]:
+    def soupify(self, parser: str = "lxml", config_file: Union[str, None] = None) -> Union[BeautifulSoup, None]:
         '''Returns bs4.BeautifulSoup if successful,
         returns None if unsuccessful or if no reponse has been received.'''
         
         # If config file provided, create custom filter
-        strainer = None
-        if config is not None:
-            self.strainer = self.strainerFromFile(config)
-            strainer = self.strainer
+        strainer = self.createStrainer(self.loadConfig(config_file))
         
         # If a reponse has been received from webpage, run it through BeautifulSoup
         if self.response is not None:
@@ -55,24 +69,43 @@ class WebScraper:
         else:
             return None
 
-    # Customization to be provided by .json file in deployment pckg
-    def strainerFromFile(self, cfg_file: str) -> SoupStrainer:
+    def createStrainer(self, config: Union[dict, None] = None) -> Union[SoupStrainer, None]:
         
-        # Check config file is .json
-        fullstop_idx = cfg_file.rfind('.')
-        if cfg_file[fullstop_idx:] != '.json':
+        strainer = SoupStrainer(config['tags'], config['attrs'])
+
+        return strainer
+
+
+    def loadConfig(self, config_file: Union[str, None] = None) -> Union[dict, None]:
+        
+        # If a config is neither stored or provided, error
+        if config_file is None and self.config is None:
             return None
 
-        # Load config.json as dict
-        cfg = {}
-        with open(cfg_file, 'r') as file:
-            cfg = json.load(file)
-        
-        # TODO: Check that configuration is legal, error out if config is invalid
+        # If config is stored but not provided
+        elif (config_file is None and self.config is not None):
+            return self.config
 
-        return self.strainerFromDict(cfg)
+        # Load new config
+        elif (config_file is not None and self.config is not None):
+            # Check config file is .json
+            fullstop_idx = config_file.rfind('.')
+            if config_file[fullstop_idx:] != '.json':
+                return None
+            
+            # Load [NAME]_config.json
+            try:
+                with open(config_file, 'r') as file:
+                    self.config = json.load(file)
+                return self.config
 
-    def strainerFromDict(self, cfg: dict) -> SoupStrainer:
-        return SoupStrainer(cfg['tags'], cfg['ids'])
+            # Error log and return old config
+            except FileNotFoundError:
+                return self.config
+
+
+    # Convert soup to text according to config file specifications
+    def soupToText(self, ):
+        pass
 
 
