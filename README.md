@@ -11,7 +11,7 @@
 <p>JSON Schema is a powerful tool for validating the structure of JSON (Javascript Object Notation) data.
 It uses various key words to allow a developer to selectively allow or restrict many properies of JSON objects, for example allowed data types, number of objects, required data, are additional arguments allowed, the list goes on.</p>
 <p>As of 29/01/21, the default schema is as follows:</p>
-
+<pre>
 <code>{
     "type": "object",
     "properties": {
@@ -36,7 +36,7 @@ It uses various key words to allow a developer to selectively allow or restrict 
     ],
     "additionalProperties": false
 }</code>
-
+</pre>
 <p>But what does this mean? The "<b>type</b>" tag</p>
 
 
