@@ -67,27 +67,35 @@ class WebScraper:
             self.soup = BeautifulSoup(self.response.content, parser, parse_only=strainer)
             return self.soup
         else:
+            # ERROR
             return None
 
     def createStrainer(self, config: Union[dict, None] = None) -> Union[SoupStrainer, None]:
-        
-        strainer = SoupStrainer(config['tags'], config['attrs'])
-
-        return strainer
+        if config is not None:
+            strainer = SoupStrainer(config['tags'], config['attrs'])
+            return strainer
+        else:
+            # Error out
+            return None
 
 
     def loadConfig(self, config_file: Union[str, None] = None) -> Union[dict, None]:
         
+        #print("loading config")
+
         # If a config is neither stored or provided, error
         if config_file is None and self.config is None:
+            #print("config_file & self.config == None")
             return None
 
         # If config is stored but not provided
         elif (config_file is None and self.config is not None):
+            #print("config_file == None, self.config != None")
             return self.config
 
         # Load new config
-        elif (config_file is not None and self.config is not None):
+        else:
+            #print("else")
             # Check config file is .json
             fullstop_idx = config_file.rfind('.')
             if config_file[fullstop_idx:] != '.json':

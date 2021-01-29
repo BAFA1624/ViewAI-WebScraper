@@ -10,7 +10,7 @@ TODO:
 
 # Test default config for .xml web documents
 default_config = {
-    'tags': ['loc'],
+    'tags': ['loc', 'lastmod', 'news:publication_date'],
     'attrs': {}
 }
 default_strainer = SoupStrainer(default_config['tags'], default_config['attrs'])
@@ -35,5 +35,6 @@ class XMLScraper(WebScraper):
         if config is not None:
             return SoupStrainer(config['tags'], config['attrs'])
         else:
+            #print("XML default_strainer")
             return default_strainer
 
