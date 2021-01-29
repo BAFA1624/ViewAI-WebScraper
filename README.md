@@ -12,7 +12,7 @@
 It uses various key words to allow a developer to selectively allow or restrict many properies of JSON objects, for example allowed data types, number of objects, required data, are additional arguments allowed, the list goes on.</p>
 <p>As of 29/01/21, the default schema is as follows:</p>
 
-{
+<code>{
     "type": "object",
     "properties": {
         "tags": {
@@ -35,7 +35,7 @@ It uses various key words to allow a developer to selectively allow or restrict 
         "output-format"
     ],
     "additionalProperties": false
-}
+}</code>
 
 <p>But what does this mean? The "<b>type</b>" tag</p>
 
