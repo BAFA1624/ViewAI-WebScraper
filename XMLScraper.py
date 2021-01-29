@@ -13,7 +13,8 @@ default_config = {
     'tags': ['loc', 'lastmod', 'news:publication_date'],
     'attrs': {}
 }
-default_strainer = SoupStrainer(default_config['tags'], default_config['attrs'])
+default_strainer = SoupStrainer(
+    default_config['tags'], default_config['attrs'])
 
 
 # Specific crawler for .xml webdocuments with different default for .soupify(...) method
@@ -28,7 +29,8 @@ class XMLScraper(WebScraper):
         if self.response is None:
             return None
         else:
-            self.soup = BeautifulSoup(self.response.content, parser, parse_only=strainer)
+            self.soup = BeautifulSoup(
+                self.response.content, parser, parse_only=strainer)
             return self.soup
 
     def createStrainer(self, config: Union[dict, None] = None) -> Union[SoupStrainer, None]:
@@ -37,4 +39,3 @@ class XMLScraper(WebScraper):
         else:
             #print("XML default_strainer")
             return default_strainer
-

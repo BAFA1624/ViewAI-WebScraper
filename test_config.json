@@ -1,5 +1,13 @@
 {
-    "tags": ["p"],
-    "attrs": {},
-    "bad-attrs": {}
+    "tags": [
+        "p"
+    ],
+    "attrs": {
+        "data-element": "text-block"
+    },
+    "bad-attrs": {},
+    "output-format": {
+        "n_items": 2,
+        "item_type": "sentence"
+    }
 }

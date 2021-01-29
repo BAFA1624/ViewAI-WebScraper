@@ -1,11 +1,14 @@
-import requests
+from requests import get
+from requests.models import Response
+from requests.status_codes import codes as responseStatusLookup
+
 from bs4 import BeautifulSoup, SoupStrainer
+
+from ErrorHandles import logError, InvalidJSONError
+from configuration_check import configuration_check
+
 import time  # Only included for testing. Remove for package deployment?
 import json
-
-# Custom request exceptions library, still to be properly implemented.
-# Hopefully will find a way to use exceptions library provided by the requests module in requests.exceptions
-from RequestExceptions import Error404
 
 # Type hinting included for ease of reading and autocompletion while in dev
 from typing import Union
@@ -14,16 +17,21 @@ from typing import Union
 TODO:
     -Error Handles:
         -Bad web responses
-            --> .getWebpageResponse(...)
+            --> .getWebpageResponse(...)  -->  COMPLETE
         -Bad configs
-            --> .loadConfig(...)
+            --> .loadConfig(...)  -->  COMPLETE
     -Error Logging:
-        -Bad web responses
-        -FileNotFoundError
-        -BadConfigError
+        -( Bad web responses, FileNotFoundError, BadConfigError )  --> COMPLETE, all errors log.
+        - Rudimentary structure of logError() built out, should be general enough for
+          possible errors that I am currently aware of.  -->  COMPLETE, produces dict ready to
+                                                              be passed to a lambda function as an
+                                                              event.
     -Default handling
     -README.md with important naming conventions, formatting for config files, etc.
+    -WebScraper.soupToText(...)  -->  Python interpreter can be super slow for iteration,
+                                       write as wrapper for c function? Use cython? 
 '''
+
 
 class WebScraper:
 
@@ -34,37 +42,41 @@ class WebScraper:
         self.strainer = None
         self.config = None
 
-    def getWebpageResponse(self, url: str, timeout: float = 2) -> Union[requests.models.Response, None]:
-            
+    def getWebpageResponse(self, url: str, timeout: float = 2) -> Union[Response, None]:
         '''Returns either requests.models.Response or None'''
-        
+
         # Make response request
-        response = requests.get(url)
-        
-        if response.status_code != 200:
+        response = get(url)
 
-            self.response = None
-
-            if response.status_code == 404:
-                raise Error404(url, timeout)
-            
-            return None
-
-        else:
-
+        try:
+            # This will raise an exception for any bad requests
+            response.raise_for_status()
             self.response = response
             return response
 
-    def soupify(self, parser: str = "lxml", config_file: Union[str, None] = None) -> Union[BeautifulSoup, None]:
+        except:
+            error_code = response.status_code
+
+            logError("In .getWebpageResponse: Bad response received (%s) from %s." % (
+                error_code, url))
+
+            # The function that calls this should check the result for None response.
+            # Assuming it was iterating through a list of urls to check, it should then
+            # pass to the next one.
+
+            return None
+
+    def soupify(self, parser: str = "lxml", schema: dict = None, filename: Union[str, None] = None) -> Union[BeautifulSoup, None]:
         '''Returns bs4.BeautifulSoup if successful,
         returns None if unsuccessful or if no reponse has been received.'''
-        
+
         # If config file provided, create custom filter
-        strainer = self.createStrainer(self.loadConfig(config_file))
-        
+        strainer = self.createStrainer(self.loadConfig(schema, filename))
+
         # If a reponse has been received from webpage, run it through BeautifulSoup
         if self.response is not None:
-            self.soup = BeautifulSoup(self.response.content, parser, parse_only=strainer)
+            self.soup = BeautifulSoup(
+                self.response.content, parser, parse_only=strainer)
             return self.soup
         else:
             # ERROR
@@ -78,42 +90,37 @@ class WebScraper:
             # Error out
             return None
 
+    def loadConfig(self, schema: dict = None, filename: Union[str, None] = None) -> Union[dict, None]:
 
-    def loadConfig(self, config_file: Union[str, None] = None) -> Union[dict, None]:
-        
-        #print("loading config")
+        config = {}
 
-        # If a config is neither stored or provided, error
-        if config_file is None and self.config is None:
-            #print("config_file & self.config == None")
+        if filename[filename.rfind('.'):] != '.json':
+            filename = f"{filename}{'.json'}"
+
+        try:
+            with open(filename, 'r') as file:
+                try:
+                    # If invalid JSON, raises ValueError
+                    config = json.load(file)
+                    # If invalid config (or schema), configuration_check handles respective errors.
+                    if configuration_check(config, schema):
+                        print("Config check OK!")
+                        # If check returns True, config is OK --> return it.
+                        return config
+                    else:
+                        return None
+                except ValueError:      # Exception for invalid JSON object within file.
+                    InvalidJSONError(filename)
+                    return None
+
+        except FileNotFoundError:
+            logError(
+                f"FileNotFoundError: {filename} was not found whilst loading configuration")
             return None
 
-        # If config is stored but not provided
-        elif (config_file is None and self.config is not None):
-            #print("config_file == None, self.config != None")
-            return self.config
-
-        # Load new config
-        else:
-            #print("else")
-            # Check config file is .json
-            fullstop_idx = config_file.rfind('.')
-            if config_file[fullstop_idx:] != '.json':
-                return None
-            
-            # Load [NAME]_config.json
-            try:
-                with open(config_file, 'r') as file:
-                    self.config = json.load(file)
-                return self.config
-
-            # Error log and return old config
-            except FileNotFoundError:
-                return self.config
-
-
     # Convert soup to text according to config file specifications
-    def soupToText(self, ):
-        pass
+    def soupToText(self) -> Union[str, None]:
 
-
+        if self.soup is None:
+            # Error
+            return None
