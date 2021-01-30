@@ -47,4 +47,4 @@ It uses various key words to allow a developer to selectively allow or restrict 
 
 </ul>
 
-
+<p>For know only the "tags" and "attrs" properties do anything useful. "bad-attrs" and "output-format" are expected to be necessary for parsing a webpage in WebScraper.soupToText(...), however this is not yet implemented as of 29/01/21.</p>
