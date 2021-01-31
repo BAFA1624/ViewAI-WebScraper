@@ -3,7 +3,7 @@
 
 
 ## Schema files & Configuration Files
-----------------------------------
+-------------------------------------
 
 #### For detailed info on schema, visit https://json-schema.org/understanding-json-schema/ or https://json-schema.org/understanding-json-schema/UnderstandingJSONSchema.pdf
 

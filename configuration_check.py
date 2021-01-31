@@ -22,7 +22,8 @@ def configuration_check(configuration: dict, schema: dict = None) -> bool:
             key=lambda e: e.path
         )
         error_message = "ValidationError raised performing configuration check."
-        error_message += ('\n\t- ' + '\n\t- '.join([str(error.message) for error in errors]))
+        error_message += ('\n\t- ' +
+                          '\n\t- '.join([str(error.message) for error in errors]))
         logError(error_message)
         return False
     except SchemaError:
@@ -32,7 +33,8 @@ def configuration_check(configuration: dict, schema: dict = None) -> bool:
             key=lambda e: e.path
         )
         error_message = "SchemaError raised performing configuration check."
-        error_message += ('\n\t- ' + '\n\t- '.join([str(error.message) for error in errors]))
+        error_message += ('\n\t- ' +
+                          '\n\t- '.join([str(error.message) for error in errors]))
         logError(error_message)
         # Log error, this is a serious error as an invalid schema will entirely
         # halt the program. Need to work out an acceptable response for this.

@@ -28,7 +28,8 @@ def logError(error_message: str, additional_info: dict = None):
     # folder in an S3 bucket.
     # For now printing to terminal for sake of testing.
 
-    print("Error payload: {}\n{}".format(error_payload['message'], error_payload['time']))
+    print("Error payload: {}\n{}".format(
+        error_payload['message'], error_payload['time']))
     sys.exit()
 
     return

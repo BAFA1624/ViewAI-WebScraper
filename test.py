@@ -12,15 +12,21 @@ from XMLScraper import XMLScraper, WebScraper
 #os.chmod('test.sh', 0o755)
 #rc = call("./test.sh")
 
-website = "https://www.bbc.co.uk/news/business-55826646"
-
+website = "https://www.bbc.co.uk/news/health-55757790"
 
 start = time.time()
 scraper = WebScraper()
 scraper.getWebpageResponse(
-    "https://www.bbc.co.uk/news/business-55826646", timeout=3)
-soup = scraper.soupify(filename="test_config.json")
+    "https://www.bbc.co.uk/news/health-55757790",
+    timeout=3
+)
 #soup = scraper.soupify()
+soup = scraper.soupify(configuration_filename="test_config.json")
+
+text = scraper.soupToText()
+
+print("\n\ntext: ", text)
+
 diff = time.time() - start
 
 print(diff)

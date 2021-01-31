@@ -1,9 +1,9 @@
 {
     "tags": [
-        "p"
+        "div"      
     ],
     "attrs": {
-        "data-element": "text-block"
+        "data-component": "text-block"
     },
     "bad-attrs": {},
     "output-format": {

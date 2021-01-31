@@ -27,7 +27,7 @@ TODO:
                                                               be passed to a lambda function as an
                                                               event.
     -Default handling
-    -README.md with important naming conventions, formatting for config files, etc.
+    -README.md with important naming conventions, formatting for config files, etc.  -->  COMPLETE
     -WebScraper.soupToText(...)  -->  Python interpreter can be super slow for iteration,
                                        write as wrapper for c function? Use cython? 
 '''
@@ -36,11 +36,11 @@ TODO:
 class WebScraper:
 
     def __init__(self, url: Union[str, None] = None) -> None:
-        self.url = url
-        self.response = None
-        self.soup = None
-        self.strainer = None
-        self.config = None
+        self.url = url          # Holds url of webpage being scraped
+        self.response = None    # Holds Response object created after receiving response from the url
+        self.soup = None        # Holds BeautifulSoup object created using received response and the SoupStrainer created to parse it
+        self.strainer = None    # Holds SoupStrainer object created to filter response according to configuration
+        self.config = None      # Holds user specified configuration
 
     def getWebpageResponse(self, url: str, timeout: float = 2) -> Union[Response, None]:
         '''Returns either requests.models.Response or None'''
@@ -66,17 +66,23 @@ class WebScraper:
 
             return None
 
-    def soupify(self, parser: str = "lxml", schema: dict = None, filename: Union[str, None] = None) -> Union[BeautifulSoup, None]:
+    def soupify(self, parser: str = "lxml", schema: dict = None, configuration_filename: Union[str, None] = None) -> Union[BeautifulSoup, None]:
         '''Returns bs4.BeautifulSoup if successful,
         returns None if unsuccessful or if no reponse has been received.'''
 
+        strainer = None
+
         # If config file provided, create custom filter
-        strainer = self.createStrainer(self.loadConfig(schema, filename))
+        if configuration_filename is not None:
+            strainer = self.createStrainer(self.loadConfig(schema, configuration_filename))
 
         # If a reponse has been received from webpage, run it through BeautifulSoup
         if self.response is not None:
             self.soup = BeautifulSoup(
-                self.response.content, parser, parse_only=strainer)
+                self.response.content, 
+                parser, 
+                parse_only=strainer
+            )
             return self.soup
         else:
             # ERROR
@@ -84,7 +90,12 @@ class WebScraper:
 
     def createStrainer(self, config: Union[dict, None] = None) -> Union[SoupStrainer, None]:
         if config is not None:
-            strainer = SoupStrainer(config['tags'], config['attrs'])
+            print("config:", config)
+            strainer = SoupStrainer(
+                name = config['tags'], 
+                attrs = config['attrs']
+            )
+            print("strainer:", strainer)
             return strainer
         else:
             # Error out
@@ -94,9 +105,9 @@ class WebScraper:
 
         config = {}
 
+        # If filename is provided
         if filename[filename.rfind('.'):] != '.json':
             filename = f"{filename}{'.json'}"
-
         try:
             with open(filename, 'r') as file:
                 try:
@@ -104,23 +115,38 @@ class WebScraper:
                     config = json.load(file)
                     # If invalid config (or schema), configuration_check handles respective errors.
                     if configuration_check(config, schema):
-                        print("Config check OK!")
-                        # If check returns True, config is OK --> return it.
-                        return config
+                        self.config = config
+                        return self.config
                     else:
                         return None
                 except ValueError:      # Exception for invalid JSON object within file.
                     InvalidJSONError(filename)
                     return None
-
         except FileNotFoundError:
             logError(
                 f"FileNotFoundError: {filename} was not found whilst loading configuration")
             return None
 
+
     # Convert soup to text according to config file specifications
-    def soupToText(self) -> Union[str, None]:
+    def soupToText(self, schema: dict = None, configuration_filename: Union[str, None] = None) -> Union[str, None]:
 
         if self.soup is None:
             # Error
             return None
+
+        if self.config is None and configuration_filename is None:
+            return None
+        elif self.config is None and configuration_filename is not None:
+            self.config = self.loadConfig(schema, configuration_filename)
+            if self.config is None:
+                return None
+       
+        for key, value in zip(self.config['bad-attrs'].keys(), self.config['bad-attrs'].values()):
+            self.soup.find({key: value}).decompose()
+
+        return self.soup.text
+
+
+
+
