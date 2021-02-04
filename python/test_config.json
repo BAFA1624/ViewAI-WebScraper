@@ -1,0 +1,13 @@
+{
+    "tags": [
+        "div"      
+    ],
+    "attrs": {
+        "data-component": "text-block"
+    },
+    "bad-attrs": {},
+    "output-format": {
+        "n_sub_items": 2,
+        "item_type": "sentence"
+    }
+}

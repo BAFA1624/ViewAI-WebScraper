@@ -1,0 +1,1 @@
+/bin/g++-9  -g  -rdynamic CMakeFiles/parser_test.dir/Parser/test.cpp.o  -o parser_test  Parser/libParser.a 

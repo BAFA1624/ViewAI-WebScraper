@@ -1,0 +1,24 @@
+{
+    "type": "object",
+    "properties": {
+        "tags": {
+            "type": "array"
+        },
+        "attrs": {
+            "type": "object"
+        },
+        "bad-attrs": {
+            "type": "object"
+        },
+        "output-format": {
+            "type": "object"
+        }
+    },
+    "required": [
+        "tags",
+        "attrs",
+        "bad-attrs",
+        "output-format"
+    ],
+    "additionalProperties": false
+}

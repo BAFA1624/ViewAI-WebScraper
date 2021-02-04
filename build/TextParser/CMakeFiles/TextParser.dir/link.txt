@@ -1,0 +1,2 @@
+/bin/ar qc libTextParser.a  CMakeFiles/TextParser.dir/TextParser.cpp.o
+/bin/ranlib libTextParser.a

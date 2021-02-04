@@ -1,0 +1,12 @@
+[
+{
+  "directory": "/home/ben/Desktop/gitrepos/ViewAI-WebScraper/build",
+  "command": "/bin/g++-9   -I/home/ben/Desktop/gitrepos/ViewAI-WebScraper/build -I/home/ben/Desktop/gitrepos/ViewAI-WebScraper/TextParser  -g   -std=gnu++14 -o CMakeFiles/parser_test.dir/Parser/test.cpp.o -c /home/ben/Desktop/gitrepos/ViewAI-WebScraper/Parser/test.cpp",
+  "file": "/home/ben/Desktop/gitrepos/ViewAI-WebScraper/Parser/test.cpp"
+},
+{
+  "directory": "/home/ben/Desktop/gitrepos/ViewAI-WebScraper/build/Parser",
+  "command": "/bin/g++-9   -I/home/ben/Desktop/gitrepos/ViewAI-WebScraper/build -I/home/ben/Desktop/gitrepos/ViewAI-WebScraper/TextParser  -g   -std=gnu++14 -o CMakeFiles/Parser.dir/parser.cpp.o -c /home/ben/Desktop/gitrepos/ViewAI-WebScraper/Parser/parser.cpp",
+  "file": "/home/ben/Desktop/gitrepos/ViewAI-WebScraper/Parser/parser.cpp"
+}
+]

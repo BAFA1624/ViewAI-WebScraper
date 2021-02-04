@@ -1,0 +1,6 @@
+/home/ben/Desktop/gitrepos/ViewAI-WebScraper/build/CMakeFiles/rebuild_cache.dir
+/home/ben/Desktop/gitrepos/ViewAI-WebScraper/build/CMakeFiles/edit_cache.dir
+/home/ben/Desktop/gitrepos/ViewAI-WebScraper/build/CMakeFiles/parser_test.dir
+/home/ben/Desktop/gitrepos/ViewAI-WebScraper/build/Parser/CMakeFiles/rebuild_cache.dir
+/home/ben/Desktop/gitrepos/ViewAI-WebScraper/build/Parser/CMakeFiles/edit_cache.dir
+/home/ben/Desktop/gitrepos/ViewAI-WebScraper/build/Parser/CMakeFiles/Parser.dir

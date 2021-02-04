@@ -1,0 +1,24 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/ben/Desktop/gitrepos/ViewAI-WebScraper/Parser/parser.hpp
+string
+-
+vector
+-
+
+/home/ben/Desktop/gitrepos/ViewAI-WebScraper/Parser/test.cpp
+fstream
+-
+iostream
+-
+string
+-
+parser.hpp
+/home/ben/Desktop/gitrepos/ViewAI-WebScraper/Parser/parser.hpp
+
