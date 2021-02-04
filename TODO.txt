@@ -1,0 +1,1 @@
+Fix soup strainers etc. It filters the entire webpage instead of selectively filtering the webpage.

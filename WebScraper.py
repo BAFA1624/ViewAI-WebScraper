@@ -15,6 +15,10 @@ from typing import Union
 
 '''
 TODO:
+--------
+FEATURES:
+    -Authentication for websites which require it.
+IMPLEMENTATION:
     -Error Handles:
         -Bad web responses
             --> .getWebpageResponse(...)  -->  COMPLETE

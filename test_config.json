@@ -7,7 +7,7 @@
     },
     "bad-attrs": {},
     "output-format": {
-        "n_items": 2,
+        "n_sub_items": 2,
         "item_type": "sentence"
     }
 }

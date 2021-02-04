@@ -22,13 +22,16 @@ scraper.getWebpageResponse(
 )
 #soup = scraper.soupify()
 soup = scraper.soupify(configuration_filename="test_config.json")
-
 text = scraper.soupToText()
 
-print("\n\ntext: ", text)
+print("\n", soup.prettify(), "\n")
+print(text, "\n")
 
 diff = time.time() - start
 
 print(diff)
+
+with open("test_soup.txt", 'w') as file:
+    file.writelines(text)
 
 #    rc = call("./test.sh")
