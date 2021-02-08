@@ -1,0 +1,18 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/ben/Desktop/gitrepos/ViewAI-WebScraper/random-c-code/simple_format_text.c
+simple_format_text.h
+/home/ben/Desktop/gitrepos/ViewAI-WebScraper/random-c-code/simple_format_text.h
+
+/home/ben/Desktop/gitrepos/ViewAI-WebScraper/random-c-code/simple_format_text.h
+stdio.h
+-
+stdlib.h
+-
+

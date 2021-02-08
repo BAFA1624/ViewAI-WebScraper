@@ -1,0 +1,2 @@
+/usr/bin/ar qc libsimple_format_text.a  CMakeFiles/simple_format_text.dir/simple_format_text.c.o
+/usr/bin/ranlib libsimple_format_text.a

@@ -1,8 +1,6 @@
 #include "simple_format_text.h"
 
-char *ConcatArr(char *arr, unsigned long idx_ini, unsigned long idx_fin);
-
-char **simple_format_text(char *text, unsigned long size)
+unsigned long simple_format_text(char ***ptr, char *text, unsigned long size)
 {
 
     unsigned long i, fullstop_count = 0;
@@ -18,7 +16,10 @@ char **simple_format_text(char *text, unsigned long size)
     unsigned long n_strings = (fullstop_count / 2) + (fullstop_count % 2);
 
     unsigned long result_size = 0;
-    char **result = (char **)malloc(n_strings * sizeof(char *));
+    *ptr = (char **)realloc((void *)*ptr, n_strings * sizeof(char *));
+    
+    //*ptr = (char **)malloc(n_strings * sizeof(char *));
+    char **target = *ptr;
 
     unsigned long start_idx = 0, final_idx = size;
     short flag = 0;
@@ -34,7 +35,7 @@ char **simple_format_text(char *text, unsigned long size)
             else
             {
                 char *new_string = ConcatArr(text, start_idx, i);
-                result[result_size++] = new_string;
+                *(target + (result_size++)) = new_string;
                 flag = 0;
                 if (text[i + 1] != '\0' && text[i + 1] != ' ')
                 {
@@ -55,7 +56,7 @@ char **simple_format_text(char *text, unsigned long size)
     if (result_size != n_strings)
     {
         char *new_string = ConcatArr(text, start_idx, final_idx);
-        result[result_size++] = new_string;
+        *(target + (result_size++)) = new_string;
     }
 
     if (result_size != n_strings)
@@ -63,8 +64,7 @@ char **simple_format_text(char *text, unsigned long size)
         printf("\nSomething went v. wrong, result_size != n_strings.\n");
     }
 
-    return result;
-
+    return n_strings;
 }
 
 char *ConcatArr(char *arr, unsigned long idx_ini, unsigned long idx_fin)
@@ -78,4 +78,16 @@ char *ConcatArr(char *arr, unsigned long idx_ini, unsigned long idx_fin)
         result[i - idx_ini] = arr[i];
     }
     return result;
+}
+
+unsigned long FileSize(FILE *f)
+{
+
+    unsigned long fSize;
+
+    fseek(f, 0, SEEK_END);
+    fSize = ftell(f);
+    rewind(f);
+
+    return fSize;
 }

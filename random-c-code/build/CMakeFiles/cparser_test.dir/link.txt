@@ -1,0 +1,1 @@
+/usr/bin/cc   -rdynamic CMakeFiles/cparser_test.dir/test.c.o  -o cparser_test  libsimple_format_text.a 
