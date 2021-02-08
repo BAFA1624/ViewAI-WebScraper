@@ -3,7 +3,7 @@
 
 int main()
 {
-    int n = 1000;
+    int count = 0, n = 1000;
     clock_t start;
     double diff;
     FILE *fp = fopen("test_soup.txt", "r");
@@ -24,9 +24,16 @@ int main()
         text[j] = tmp[i];
     }
 
+    for (size_t i = 0; i < fSize * n; ++i)
+    {
+        if (text[i] == '.')
+            count++;
+    }
+    unsigned long expected_len = (count / 2) + (count % 2);
+
     char **test = NULL;
     start = clock();
-    unsigned long len = simple_format_text(&test, text, fSize);
+    unsigned long len = simple_format_text(&test, text, fSize * n);
     diff = ((double)(clock() - start)) / CLOCKS_PER_SEC;
 
     if (test)
@@ -38,7 +45,7 @@ int main()
         }
     }
 
-    printf("\nlen = %lu; Time taken = %lf seconds.\n", len, diff);
+    printf("\nexpected_len = %lu; len = %lu; Time taken = %lf seconds.\n", expected_len, len, diff);
 
     fclose(fp);
 }

@@ -17,8 +17,7 @@ unsigned long simple_format_text(char ***ptr, char *text, unsigned long size)
 
     unsigned long result_size = 0;
     *ptr = (char **)realloc((void *)*ptr, n_strings * sizeof(char *));
-    
-    //*ptr = (char **)malloc(n_strings * sizeof(char *));
+
     char **target = *ptr;
 
     unsigned long start_idx = 0, final_idx = size;
