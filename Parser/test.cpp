@@ -1,6 +1,6 @@
-#include <fstream>
 #include <iostream>
-#include <string>
+#include <fstream>
+#include <chrono>
 #include "parser.hpp"
 
 std::string open_file(std::string filename)
@@ -24,13 +24,22 @@ std::string open_file(std::string filename)
 
 int main()
 {
-    std::string test = open_file("test_soup.txt");
     
-    //std::cout << test << std::endl;
+    std::string text = "";
+    for (int i = 0; i < 20; ++i)
+        text += open_file("test_soup2.txt");
+    Parser test;
+    test.setText(text);
+    //std::cout << test.text() << std::endl;
 
-    std::vector<std::string> formatted_str = format_text(test, '.');
-    for (auto i = formatted_str.begin(); i != formatted_str.end(); ++i)
-    {
-        std::cout << *i << "\n\n";
-    }
+    auto start = std::chrono::high_resolution_clock::now();
+    test.replace_tokens(text);
+    auto end = std::chrono::high_resolution_clock::now();
+
+    auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start).count();
+
+    std::cout << duration << std::endl;
+
+
+
 }
